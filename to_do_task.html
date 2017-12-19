@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  table, tr, td {
+    border: 1px solid black;
+    padding: 3px 5px 3px 5px;
+    border-collapse: collapse;
+  }
+  table {
+    width: 40%;
+  }
+  td tr:first-child {
+    width: 70%;
+  }
+  .head {
+    background-color: #99e6ff;
+  }
+  .inactive {
+    background-color: #ffbf80;
+  }
+  .active {
+    background-color: #80ffaa!important;
+  }
+</style>
+<body>
+
+<div ng-app="DoDids" ng-controller="myCtrl">
+
+<p>Add your task and click "Add new"</p>
+<p>Name : <input type="text" ng-model="dscr" placeholder="Enter name here">
+  <button ng-click="addList()">Add new</button>
+</p>
+<table width="50%">
+  <tr class="head">
+    <td width="50%">Task details:</td>
+    <td width="25%">Task status:</td>
+    <td width="25%">Clear button:</td>
+  </tr>
+  <tr ng-repeat="did in dids"
+      ng-class="cond[$index]">
+    <td>{{did}}</td>
+    <td ng-click="inactive' = !'active">
+      <span ng-click="chngBtn($index)">
+        {{doneBtn[$index]}}
+      </span>
+    </td>
+    <td>
+      <span ng-click="del($index)">
+        Delete
+      </span>
+    </td>
+  </tr>
+</table>
+<h4>{{errMsg}}</h4>
+
+</div>
+<script>
+angular.module("DoDids", [])
+  .controller("myCtrl", function($scope){
+    $scope.dids = [];
+    $scope.doneBtn = [];
+    $scope.cond = [];
+    $scope.errMsg = "";
+    $scope.addList = function(){
+      if(!$scope.dscr){return}
+      if($scope.dids.indexOf($scope.dscr) == -1){
+        $scope.dids.push($scope.dscr);
+        $scope.doneBtn.push("Tag as Finished");
+        $scope.cond.push("inactive");
+        $scope.dscr = "";
+        $scope.doneBtn.push("Tag as Finished");
+      }else{
+        $scope.errMsg = $scope.dscr+" Already here";
+      }
+    }
+    $scope.chngBtn = function(x){
+      if($scope.doneBtn[x] == "Tag as Unfinished"){
+        $scope.doneBtn[x] = "Tag as Finished";
+        $scope.parentIndex = x;
+        $scope.cond[x] = "inactive";
+        return;
+      }
+      $scope.doneBtn[x] = "Tag as Unfinished";
+      $scope.cond[x] = "active";
+    }
+    $scope.del = function(x){
+      $scope.dids.splice(x, 1);
+      $scope.doneBtn.splice(x, 1);
+    }
+  });
+</script>
+</body>
+</html>
